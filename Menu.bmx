@@ -25,7 +25,7 @@ Type TMenu
 	End Method
 	
 	Method render:Int()
-		Local lineHeight:Int = 40
+		Local lineHeight:Int = 0
 		
 		DrawImage(Self.bgImage, 0, 0)
 		
@@ -37,9 +37,9 @@ Type TMenu
 			End If
 			
 			If i = 1 Then
-				lineHeight = 60
+				lineHeight :+ 60
 			Else
-				lineHeight = 40
+				lineHeight :+ 40
 			End If
 			
 			If i = idx Then
@@ -49,7 +49,7 @@ Type TMenu
 			End If
 			
 			SetScale(Self.scale, Self.scale)
-			DrawText(Self.options[i], (1280 - (TextWidth(Self.options[i]) * Self.scale)) / 2, 100 + lineHeight * i)
+			DrawText(Self.options[i], (1280 - (TextWidth(Self.options[i]) * Self.scale)) / 2, 100 + lineHeight)
 			SetScale(1, 1)
 		Next
 		
