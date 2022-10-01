@@ -34,7 +34,10 @@ Type TStory
 		DrawText(Self.maxFrames, 1200, 700)
 		
 		Self.maxFrames :- 1
+		
+		If KeyHit(KEY_ENTER) Or KeyHit(KEY_ESCAPE) Or KeyHit(KEY_SPACE) Then Return 2
 		If Self.maxFrames > 0 Then Return 1
+		
 		Return 2
 	End Method
 End Type

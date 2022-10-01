@@ -8,6 +8,7 @@ Type TMenu
 	Field creditsMaxFrames:Int
 	Field creditsY:Float
 	Field lastCreditsY:Float
+	Field scale:Float
 	
 	Method New()
 		Self.bgImage = LoadImage("Assets/splash_bg.png")
@@ -20,6 +21,7 @@ Type TMenu
 		Self.creditsMaxFrames = 0
 		Self.creditsY = -10
 		Self.lastCreditsY = 670
+		Self.scale = 1.5
 	End Method
 	
 	Method render:Int()
@@ -29,9 +31,9 @@ Type TMenu
 		
 		For Local i:Int = 0 Until 5
 			If i = 0 Then 
-				SetScale(3,3)
+				Self.scale = 3
 			Else 
-				SetScale(1,1)
+				Self.scale = 1.5
 			End If
 			
 			If i = 1 Then
@@ -46,16 +48,18 @@ Type TMenu
 				SetColor(255, 255, 255)
 			End If
 			
-			DrawText(Self.options[i], (1280 - TextWidth(Self.options[i])) / 2, 100 + lineHeight * i)
+			SetScale(Self.scale, Self.scale)
+			DrawText(Self.options[i], (1280 - (TextWidth(Self.options[i]) * Self.scale)) / 2, 100 + lineHeight * i)
+			SetScale(1, 1)
 		Next
 		
 		If Self.creditsMaxFrames > 0 Then
 			SetColor(255, 255, 255)
-			DrawText("Bruno Ribeiro", 1100, Self.creditsY)
+			DrawText("Bruno Ribeiro", 1100, Self.creditsY - 40)
 			SetColor(85, 255, 255)
 			DrawText("David Duarte", 1100, Self.creditsY - 20)
 			SetColor(255, 85, 255)
-			DrawText("David Duarte", 1100, Self.creditsY - 40)
+			DrawText("Miguel Bengala", 1100, Self.creditsY)
 			
 			Self.creditsY :+ (Self.lastCreditsY - Self.creditsY) / 5
 			Self.creditsMaxFrames :+ 1

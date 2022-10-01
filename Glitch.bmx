@@ -56,7 +56,7 @@ Repeat
 				game = New TGame()
 			End If 
 			status = game.render()
-		'Case 4 End
+		Case 4 Exit
 	End Select
 	
 	Flip
