@@ -24,6 +24,8 @@ Type TSplash
 
 		DrawText(Self.maxFrames, 1200, 700)
 		
+		If KeyHit(KEY_ENTER) Or KeyHit(KEY_ESCAPE) Or KeyHit(KEY_SPACE) Then Return 1
+		
 		Self.fade :+ 0.01
 		
 		Self.maxFrames :- 1
