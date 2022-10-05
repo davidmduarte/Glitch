@@ -9,9 +9,11 @@ Type TMenu
 	Field creditsY:Float
 	Field lastCreditsY:Float
 	Field scale:Float
+	Field music:TSound
+	Field musicChannel:TChannel
 	
 	Method New()
-		Self.bgImage = LoadImage("Assets/splash_bg.png")
+		Self.bgImage = LoadImage("assets/splash_bg.png")
 		Self.options[0] = "START"
 		Self.options[1] = "Credits"
 		Self.options[2] = "Rules"
@@ -22,6 +24,8 @@ Type TMenu
 		Self.creditsY = -10
 		Self.lastCreditsY = 670
 		Self.scale = 1.5
+		Self.music = LoadSound("assets/glitch_intro_loop.wav", True)
+		Self.musicChannel = PlaySound(Self.music)
 	End Method
 	
 	Method render:Int()
@@ -77,7 +81,9 @@ Type TMenu
 			If Self.idx > 4 Then Self.idx = 0
 		Else If KeyHit(KEY_ENTER) Then
 			Select Self.idx
-				Case 0 Return 3
+				Case 0 
+					StopChannel(Self.musicChannel)
+					Return 3
 				Case 1 Self.creditsMaxFrames = 5 * 60
 				Case 2 
 					If Self.options[2] = "Rules" Then 
@@ -86,7 +92,9 @@ Type TMenu
 						Self.options[2] = "Rules"
 					End If
 				Case 3 Return 1
-				Case 4 Return 4
+				Case 4 
+					StopChannel(Self.musicChannel)
+					Return 4
 			End Select
 		End If
 		
