@@ -6,6 +6,10 @@ Global colorNames:String[] = ["pink", "blue", "white", "green"]
 Global sound:TSound[]
 Global soundChannel:TChannel[]
 
+Global leftLineImage:TImage[]
+Global rightLineImage:TImage[]
+Global centerLineImage:TImage[]
+
 Type TRGB
 	Field r:Int
 	Field g:Int
@@ -59,10 +63,20 @@ Type TSoundPiece
 			End If
 		End If
 
-		SetColor(Self.mapColor[Self.lineIdx].r, Self.mapColor[Self.lineIdx].g, Self.mapColor[Self.lineIdx].b)
-		DrawRect(auxX, auxY, Self.width, 10)
+		'SetColor(Self.mapColor[Self.lineIdx].r, Self.mapColor[Self.lineIdx].g, Self.mapColor[Self.lineIdx].b)
+		'DrawRect(auxX, auxY, Self.width, 10)
+		Self.drawFancyLine(auxX, auxY, Self.width)
 		SetColor(255, 255, 255)
 
+	End Method
+	
+	Method drawFancyLine(x:Float, y:Float, w:Float)
+		y :-9
+		SetBlend(ALPHABLEND)
+		DrawImage(leftLineImage[Self.lineIdx], x, y)
+		DrawImageRect(centerLineImage[Self.lineIdx], x + 15, y, w - 30, 29)
+		DrawImage(rightLineImage[Self.lineIdx], x + w - 15, y)
+		SetBlend(MASKBLEND)
 	End Method
 End Type
 
@@ -114,5 +128,17 @@ Function InitSoundLines(line1:TSoundLine Var, line2:TSoundLine Var, line3:TSound
 	
 	For Local j:Int = 0 Until 4
 		sound[j] = LoadSound("assets/" + colorNames[j] + "_sound.wav", True)
+	Next
+End Function
+
+Function InitLineImages()
+	leftLineImage = New TImage[4]
+	rightLineImage = New TImage[4]
+	centerLineImage = New TImage[4]
+
+	For Local i:Int = 0 Until 4
+		leftLineImage[i] = LoadImage("assets/bars/" + colorNames[i] + "_left.png")
+		rightLineImage[i] = LoadImage("assets/bars/" + colorNames[i] + "_right.png")
+		centerLineImage[i] = LoadImage("assets/bars/" + colorNames[i] + "_center.png")
 	Next
 End Function

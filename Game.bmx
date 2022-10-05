@@ -24,6 +24,8 @@ Type TGame
 	Field speed:Float
 	Field music:TSound
 	Field musicChannel:TChannel
+	Field infoKeys1:TImage
+	Field infoKeys2:TImage
 	
 	Method New()
 		Self.life = 200
@@ -44,11 +46,15 @@ Type TGame
 		Self.cntFrames = 0
 		Self.speed = -3
 		
+		InitLineImages()
 		InitSoundLines(Self.line1, Self.line2, Self.line3, Self.line4, Self.speed)
 		
 		Self.music = LoadSound("assets/glitch_gameplay_loop.wav", True)
 		Self.musicChannel = PlaySound(Self.music)
 		SetChannelVolume(Self.musicChannel, 0.5)
+		
+		Self.infoKeys1 = LoadImage("assets/info_keys1.png")
+		Self.infoKeys2 = LoadImage("assets/info_keys2.png")
 	End Method
 	
 	Method render:Int()
@@ -99,9 +105,11 @@ Type TGame
 		End If
 		
 		'If Self.mode = 0 Then ' music mode
+			DrawImage(Self.infoKeys1, 10, 10)
 			' dont know yet
 			HandleSoundKeys(Self.ball1, Self.ball2, Self.ball3, Self.ball4)
 		'Else 				  ' pill mode
+			DrawImage(Self.infoKeys2, 10, 710 - ImageHeight(Self.infoKeys2))
 		'	pill.handleKeys()
 		'End If
 		
