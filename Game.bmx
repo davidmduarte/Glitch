@@ -4,6 +4,7 @@ Import "Paralax.bmx"
 Import "Pill.bmx"
 Import "SoundLine.bmx"
 Import "Ball.bmx"
+Import "Obstacle.bmx"
 
 Type TGame
 	Const every10Seconds:Int = 10 * 60
@@ -26,6 +27,10 @@ Type TGame
 	Field musicChannel:TChannel
 	Field infoKeys1:TImage
 	Field infoKeys2:TImage
+	Field upCourtinH:Float
+	Field downCourtinH:Float
+	Field upCourtinAux:Float
+	Field downCourtinAux:Float
 	
 	Method New()
 		Self.life = 200
@@ -55,6 +60,11 @@ Type TGame
 		
 		Self.infoKeys1 = LoadImage("assets/info_keys1.png")
 		Self.infoKeys2 = LoadImage("assets/info_keys2.png")
+		
+		Self.upCourtinH = 0
+		Self.downCourtinH = 295
+		Self.upCourtinAux = 0
+		Self.downCourtinAux = 295
 	End Method
 	
 	Method render:Int()
@@ -85,6 +95,8 @@ Type TGame
 		DrawRect(Self.life - 1, 0, 2, 720)
 		SetColor(255, 255, 255)
 		
+		Self.DrawObstacles(Self.speed, Self.cntFrames, 200)
+		
 		Self.pill.draw(200)
 		
 		Self.ball1.draw(200)
@@ -104,28 +116,54 @@ Type TGame
 			Self.mode = ((Self.mode + 1) Mod 2)
 		End If
 		
-		'If Self.mode = 0 Then ' music mode
+		If Self.mode = 0 Then 								' music mode
 			DrawImage(Self.infoKeys1, 10, 10)
-			' dont know yet
-			HandleSoundKeys(Self.ball1, Self.ball2, Self.ball3, Self.ball4)
-		'Else 				  ' pill mode
+			Self.HandleSoundKeys()
+			Self.upCourtinH = 425
+			Self.downCourtinH = 0
+		Else 				  								' pill mode
 			DrawImage(Self.infoKeys2, 10, 710 - ImageHeight(Self.infoKeys2))
-		'	pill.handleKeys()
-		'End If
+			pill.handleKeys()
+			Self.upCourtinH = 0
+			Self.downCourtinH = 295
+		End If
+		
+		Self.drawCourtins()
 		
 		Return 3
 	End Method
+	
+	Method HandleSoundKeys()
+		Self.ball1.active = False
+		Self.ball2.active = False
+		Self.ball3.active = False
+		Self.ball4.active = False
+		
+		If KeyDown(KEY_1) Then Self.ball1.active = True
+		If KeyDown(KEY_2) Then Self.ball2.active = True
+		If KeyDown(KEY_3) Then Self.ball3.active = True
+		If KeyDown(KEY_4) Then Self.ball4.active = True		
+	End Method
+	
+	Method DrawObstacles(speed:Float, cntFrames:Float, presentX:Float)
+		For Local i:Int = 0 Until Len(obstacles)
+			obstacles[i].draw(speed, cntFrames, presentX)
+		Next
+	End Method
+	
+	Method drawCourtins()
+		Self.upCourtinAux :+ (Self.upCourtinH - Self.upCourtinAux) / 5
+		Self.downCourtinAux :+ (Self.downCourtinH - Self.downCourtinAux) / 5
+		
+		SetBlend(ALPHABLEND)
+		SetColor(0, 0, 0)
+		SetAlpha(0.95)
+		DrawRect(0, 0, 1280, Self.upCourtinAux)
+		DrawRect(0, 425 + (295 - Self.downCourtinAux), 1280, Self.downCourtinAux)
+		SetAlpha(1)
+		SetColor(255, 255, 255)
+		SetBlend(MASKBLEND)		
+	End Method
 End Type
 
-Function HandleSoundKeys(ball1:TBall Var, ball2:TBall Var, ball3:TBall Var, ball4:TBall Var)
-	ball1.active = False
-	ball2.active = False
-	ball3.active = False
-	ball4.active = False
-	
-	If KeyDown(KEY_1) Then ball1.active = True
-	If KeyDown(KEY_2) Then ball2.active = True
-	If KeyDown(KEY_3) Then ball3.active = True
-	If KeyDown(KEY_4) Then ball4.active = True
-	
-End Function
+
